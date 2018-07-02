@@ -23,8 +23,8 @@ for eureka_app in eureka_list.iter('name'):
                 eureka_app_instance_text = xml.etree.ElementTree.fromstring(eureka_app_instance_xml.text)
                 eureka_app_instance_statusurl = eureka_app_instance_text.find('statusPageUrl').text
                 try:
-                    eureka_app_instance_statusurl_status_code = requests.get(eureka_app_instance_statusurl, timeout=0.001).status_code
+                    eureka_app_instance_statusurl_status_code = requests.head(eureka_app_instance_statusurl).status_code
                 except requests.exceptions.RequestException:
                     eureka_app_instance_statusurl_status_code = '001'
                 print(app_name, instance.text, eureka_app_instance_statusurl, eureka_app_instance_statusurl_status_code)
-print("My program took", time.time() - start_time, " seconds to run")
+print("app.py took", time.time() - start_time, " seconds to run")

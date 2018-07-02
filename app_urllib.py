@@ -37,4 +37,4 @@ for eureka_app in eureka_list.iter('name'):
                 except URLError as e:
                     eureka_app_instance_statusurl_status_code = '001'
                 print(app_name, instance.text, eureka_app_instance_statusurl, eureka_app_instance_statusurl_status_code)
-print("My program took", time.time() - start_time, " seconds to run")
+print("app_urllib.py took", time.time() - start_time, " seconds to run")
