@@ -4,20 +4,22 @@ from urllib.error import URLError, HTTPError
 import xml.etree.ElementTree
 import re
 import time
-from multiprocessing import Process, Pool
+from multiprocessing import Pool
 
 
 def millis():
-  return int(round(time.time() * 1000))
+    return int(round(time.time() * 1000))
+
 
 def http_get(url):
-  try:
-      result = {"url": url, "status": urlopen(url).getcode()}
-  except HTTPError as e:
-      result = {"url": url, "status": e.code}
-  except URLError as e:
-      result = {"url": url, "status": 1001}
-  return result
+    try:
+        result = {"url": url, "status": urlopen(url).getcode()}
+    except HTTPError as e:
+        result = {"url": url, "status": e.code}
+    except URLError as e:
+        result = {"url": url, "status": 1001}
+    return result
+
 
 instance_list = []
 instance_table = {}
@@ -45,7 +47,7 @@ for eureka_app in eureka_list.iter('name'):
                 instance_table[z] = {"app_name": app_name, "instance_id": instance.text, "status_page_url": eureka_app_instance_statusurl}
                 z = z + 1
 
-pool = Pool(processes=10)
+pool = Pool(processes=5)
 results = pool.map(http_get, instance_list)
 
 for i in results:
@@ -57,9 +59,5 @@ for i in results:
 
 for index, value in results_table.items():
     print(value)
-#for i in results:
-#    for j in instance_table:
-#        if i['url'] == j['status_page_url']:
-#            print(j['app_name'], " ", j['instance_id'], " ", i['url'], " ", i['status'])
 
 print( "\nTotal took " + str(millis() - start_time) + " ms\n")
