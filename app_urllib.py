@@ -5,6 +5,7 @@ import xml.etree.ElementTree
 import re
 import time
 from multiprocessing import Pool
+from flask import Flask, render_template
 
 
 def millis():
@@ -23,13 +24,13 @@ def http_get(url):
 
 instance_list = []
 instance_table = {}
-results_table = {}
+results_table = []
 start_time = millis()
 eureka_url = 'http://213.183.195.222:8761/eureka/apps'
 eureka_xml = requests.get(eureka_url)
 eureka_list = xml.etree.ElementTree.fromstring(eureka_xml.text)
 z = 1
-t = 1
+
 
 for eureka_app in eureka_list.iter('name'):
     app_name = eureka_app.text
@@ -53,11 +54,26 @@ results = pool.map(http_get, instance_list)
 for i in results:
     for j, k in instance_table.items():
         if i['url'] == k['status_page_url']:
-            results_table[t] = dict(app_name=k['app_name'], instance_id=k['instance_id'],
-                                    status_page_url=k['status_page_url'], http_status=i['status'])
-            t = t + 1
+            app_name = str(k['app_name'])
+            instance_id = str(k['instance_id'])
+            status_page_url = str(k['status_page_url'])
+            http_status = str(i['status'])
+            results_table.append("microservice_collector_http_status{app_name=\"" + app_name + "\",instance_id=\"" + instance_id + "\",status_page_url=\"" + status_page_url + "\"} " + http_status)
 
-for index, value in results_table.items():
-    print(value)
+
+for l in results_table:
+    print(l)
 
 print( "\nTotal took " + str(millis() - start_time) + " ms\n")
+
+
+app = Flask(__name__)
+
+
+@app.route("/")
+def home():
+    return render_template("exporter.html", data=results_table)
+
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0')
