@@ -58,7 +58,7 @@ for i in results:
             instance_id = str(k['instance_id'])
             status_page_url = str(k['status_page_url'])
             http_status = str(i['status'])
-            results_table.append("microservice_collector_http_status{app_name=\"" + app_name + "\",instance_id=\"" + instance_id + "\",status_page_url=\"" + status_page_url + "\"} " + http_status)
+            results_table.append("eureka_collector_http_status{app_name=\"" + app_name + "\",instance_id=\"" + instance_id + "\",status_page_url=\"" + status_page_url + "\"} " + http_status)
 
 
 for l in results_table:
@@ -72,7 +72,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return render_template("exporter.html", data=results_table)
+    return render_template("exporter", data=results_table)
 
 
 if __name__ == "__main__":
