@@ -55,6 +55,7 @@ def get_result(url):
                 http_status = str(i['status'])
                 results_table.append("eureka_collector_http_status{app_name=\"" + app_name + "\",instance_id=\"" + instance_id + "\",status_page_url=\"" + status_page_url + "\"} " + http_status)
     results_table.append("eureka_collector_scrape_time " + str(millis() - start_time))
+    results_table.append("eureka_collector_alive_status " + str(requests.get(url).status_code))
     print("\nTotal time taken " + str(millis() - start_time) + " ms\n")
     return results_table
 
