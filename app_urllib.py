@@ -62,7 +62,7 @@ def get_result(url):
 app = Flask(__name__)
 
 
-@app.route("/")
+@app.route("/metrics")
 def home():
     return render_template("exporter", data=get_result(eureka_url))
 
