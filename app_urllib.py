@@ -46,6 +46,7 @@ def get_result(url):
                     instance_table[z] = {"app_name": app_name, "instance_id": instance.text, "status_page_url": eureka_app_instance_statusurl}
                     z = z + 1
     results = pool.map(http_get, instance_list)
+    pool.close()
     for i in results:
         for j, k in instance_table.items():
             if i['url'] == k['status_page_url']:
